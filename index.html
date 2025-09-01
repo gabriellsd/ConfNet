@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConfNet - Configurador de Proxy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar lateral esquerda -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="logo">ConfNet - Configurador de Proxy</h1>
+            </div>
+            <nav class="nav-menu">
+                <button class="nav-btn active" data-section="inicio">Início</button>
+                <button class="nav-btn" data-section="configurar-proxy">Configurar Proxy</button>
+                
+                <!-- Menu Configurações com subitens -->
+                <div class="nav-group">
+                    <button class="nav-btn nav-parent" data-section="configuracoes">
+                        <span>Configurações</span>
+                        <span class="expand-icon">▼</span>
+                    </button>
+                    <div class="nav-submenu">
+                        <button class="nav-sub-btn" data-subsection="geral">Geral</button>
+                        <button class="nav-sub-btn" data-subsection="lojas">Lojas</button>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo principal -->
+        <main class="main-content">
+            <!-- Seção Início -->
+            <section id="inicio" class="content-section active">
+                <h2>Dashboard do Sistema</h2>
+                <p>Informações em tempo real da sua máquina Windows.</p>
+                
+                <!-- Informações de Rede Consolidadas -->
+                <div class="info-section">
+                    <h3>Interfaces de Rede</h3>
+                    <div class="network-consolidated" id="network-consolidated">
+                        <p>Carregando interfaces de rede...</p>
+                    </div>
+                </div>
+                
+                <!-- Informações de Proxy -->
+                <div class="info-section">
+                    <h3>Configuração de Proxy</h3>
+                    <div class="proxy-info" id="proxy-info">
+                        <p>Carregando configurações de proxy...</p>
+                    </div>
+                </div>
+                
+                <!-- Botões de Ação -->
+                <div class="action-buttons">
+                    <button class="refresh-btn" onclick="refreshSystemInfo()">🔄 Atualizar</button>
+                </div>
+            </section>
+
+            <!-- Seção Configurar Proxy -->
+            <section id="configurar-proxy" class="content-section">
+                <h2>Configurar Proxy</h2>
+                <p>Configure automaticamente o proxy baseado na sua empresa e filial.</p>
+                
+
+                
+                <div class="proxy-config-form">
+                    <div class="config-step active" id="step-1">
+                        <h3>Passo 1: Selecionar Empresa</h3>
+                        <div class="company-selection">
+                            <!-- Cards das empresas foram removidos -->
+                        </div>
+                    </div>
+
+                    <div class="config-step" id="step-2">
+                        <h3>Passo 2: Selecionar Filial</h3>
+                        <div class="branch-selection" id="branch-selection">
+                            <!-- Filiais serão carregadas dinamicamente -->
+                        </div>
+                        <button class="back-btn" onclick="previousStep()">Voltar</button>
+                    </div>
+
+                    <div class="config-step" id="step-3">
+                        <h3>Passo 3: Tipo de Conexão</h3>
+                        <div class="connection-selection">
+                            <button class="connection-btn" data-connection="ethernet" onclick="selectConnectionType('ethernet')">
+                                <h4>Cabo (Ethernet)</h4>
+                                <p>Configuração para conexão cabeada</p>
+                            </button>
+                            <button class="connection-btn" data-connection="wifi" onclick="selectConnectionType('wifi')">
+                                <h4>Wi-Fi</h4>
+                                <p>Configuração para conexão sem fio</p>
+                            </button>
+                        </div>
+                        <button class="back-btn" onclick="previousStep()">Voltar</button>
+                    </div>
+
+                    <div class="config-step" id="step-4">
+                        <h3>Passo 4: Confirmar Configuração</h3>
+                        <div class="config-summary" id="config-summary">
+                            <!-- Resumo da configuração será exibido aqui -->
+                        </div>
+                        <div class="action-buttons">
+                            <button class="back-btn" onclick="previousStep()">Voltar</button>
+                            <button class="apply-btn" onclick="applyProxyConfig()">Aplicar Configuração</button>
+                        </div>
+                    </div>
+
+                    <div class="config-step" id="step-5">
+                        <h3>Configuração Aplicada!</h3>
+                        <div class="success-message">
+                            <p>O proxy foi configurado com sucesso para:</p>
+                            <div class="final-config" id="final-config">
+                                <!-- Configuração final será exibida aqui -->
+                            </div>
+                            <div class="next-actions">
+                                <button class="new-config-btn" onclick="startNewConfig()">Nova Configuração</button>
+
+                                <button class="home-btn" onclick="showSection('inicio')">Voltar ao Início</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção de Configurações -->
+            <div class="content-section" id="configuracoes">
+                <!-- Cabeçalho das configurações com botão de logout -->
+                <div class="config-header">
+                    <div>
+                        <h3>Configurações do Sistema</h3>
+                        <p>Acesso restrito - Área administrativa</p>
+                    </div>
+                    <button class="btn-secondary" onclick="logoutConfig()">Sair das Configurações</button>
+                </div>
+                
+                <div class="config-subsection active" id="config-geral">
+                    <h3>Configurações Gerais</h3>
+                    <p>Configure as preferências básicas da aplicação.</p>
+                    
+                    <div class="settings-form">
+                        <div class="form-group">
+                            <label for="theme">Tema:</label>
+                            <select id="theme" name="theme">
+                                <option value="light">Claro</option>
+                                <option value="dark">Escuro</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="language">Idioma:</label>
+                            <select id="language" name="language">
+                                <option value="pt-BR">Português (Brasil)</option>
+                                <option value="en-US">English (US)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="notifications">
+                                <input type="checkbox" id="notifications" name="notifications" checked>
+                                Ativar notificações
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="auto-backup">
+                                <input type="checkbox" id="auto-backup" name="auto-backup" checked>
+                                Backup automático
+                            </label>
+                        </div>
+                        
+                        <button class="save-btn">Salvar Configurações</button>
+                    </div>
+                </div>
+
+                <!-- Subseção Lojas -->
+                <div class="config-subsection" id="config-lojas">
+                    <h3>Gerenciar Empresas</h3>
+                    <p>Cadastre e gerencie as empresas para configuração de proxy.</p>
+                    
+                    <div class="companies-branches-container">
+                        <!-- Card das Empresas -->
+                        <div class="companies-section">
+                                                    <div class="section-header">
+                            <h4>Empresas Cadastradas</h4>
+                            <div class="header-actions">
+                                <button class="btn-secondary" onclick="clearAllCompanies()">Limpar Todas</button>
+                                <button class="btn-primary" onclick="openNewCompanyModal()">+ Nova Empresa</button>
+                            </div>
+                        </div>
+                            
+                            <div class="companies-list" id="companies-list">
+                                <!-- Lista de empresas será carregada dinamicamente -->
+                            </div>
+                        </div>
+                        
+                        <!-- Card das Filiais -->
+                        <div class="branches-section">
+                            <div class="section-header">
+                                <h4>Filiais da Empresa</h4>
+                                <div class="header-actions">
+                                    <button class="btn-primary" id="add-branch-btn" onclick="openNewBranchModal()" disabled>+ Nova Filial</button>
+                                </div>
+                            </div>
+                            
+                            <div class="branches-content" id="branches-content">
+                                <div class="no-company-selected">
+                                    <p>Selecione uma empresa para ver suas filiais</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </main>
+    </div>
+
+    <!-- Modal de Configurações de Rede -->
+    <div id="network-modal" class="modal">
+        <div class="modal-content windows-style">
+            <div class="modal-header windows-header">
+                <h3>Propriedades de Protocolo IP Versão 4 (TCP/IPv4)</h3>
+                <span class="close" onclick="closeNetworkModal()">&times;</span>
+            </div>
+            <div class="modal-body windows-body">
+                <!-- Abas -->
+                <div class="windows-tabs">
+                    <div class="tab active">Geral</div>
+                </div>
+                
+                <!-- Descrição -->
+                <div class="windows-description">
+                    As configurações IP podem ser atribuídas automaticamente se a rede oferecer suporte a esse recurso. Caso contrário, você precisa solicitar ao administrador de rede as configurações IP adequadas.
+                </div>
+                
+                <!-- Configuração de Endereço IP -->
+                <div class="windows-section">
+                    <h4>Configuração de Endereço IP</h4>
+                    <div class="config-status">
+                        <div class="status-item" id="ip-config-status">
+                            <span class="status-label">Status:</span>
+                            <span class="status-value" id="ip-status-text">Carregando...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="ip-fields">
+                        <div class="field-group">
+                            <label>Endereço IP:</label>
+                            <span class="field-value" id="modal-ip-display">-</span>
+                        </div>
+                        <div class="field-group">
+                            <label>Máscara de sub-rede:</label>
+                            <span class="field-value" id="modal-subnet-display">-</span>
+                        </div>
+                        <div class="field-group">
+                            <label>Gateway padrão:</label>
+                            <span class="field-value" id="modal-gateway-display">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Configuração de Servidor DNS -->
+                <div class="windows-section">
+                    <h4>Configuração de Servidor DNS</h4>
+                    <div class="config-status">
+                        <div class="status-item" id="dns-config-status">
+                            <span class="status-label">Status:</span>
+                            <span class="status-value" id="dns-status-text">Carregando...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="dns-fields">
+                        <div class="field-group">
+                            <label>Servidor DNS preferencial:</label>
+                            <span class="field-value" id="modal-dns-primary-display">-</span>
+                        </div>
+                        <div class="field-group">
+                            <label>Servidor DNS alternativo:</label>
+                            <span class="field-value" id="modal-dns-secondary-display">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Opção adicional -->
+                <div class="windows-section">
+                    <div class="config-info">
+                        <span class="info-text">Configurações de rede em tempo real</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer windows-footer">
+                <button class="windows-btn ok" onclick="closeNetworkModal()">OK</button>
+                <button class="windows-btn cancel" onclick="closeNetworkModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+                    <!-- Modal para Criar/Editar Empresa -->
+                <div id="company-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="modal-title">Nova Empresa</h3>
+                            <span class="close" onclick="closeCompanyModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form id="company-form">
+                                <div class="form-group">
+                                    <label for="company-name">Nome da Empresa *</label>
+                                    <input type="text" id="company-name" name="company-name" required placeholder="Ex: COLATUSSO">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="company-description">Descrição</label>
+                                    <textarea id="company-description" name="company-description" rows="3" placeholder="Descrição da empresa"></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="company-address">Endereço</label>
+                                    <input type="text" id="company-address" name="company-address" placeholder="Endereço da empresa">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="company-phone">Telefone</label>
+                                    <input type="text" id="company-phone" name="company-phone" placeholder="(11) 99999-9999">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn-secondary" onclick="closeCompanyModal()">Cancelar</button>
+                            <button class="btn-primary" onclick="saveCompany()">Salvar Empresa</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal para Criar/Editar Filial -->
+                <div id="branch-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 id="branch-modal-title">Nova Filial</h3>
+                            <span class="close" onclick="closeBranchModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <form id="branch-form">
+                                <div class="form-group">
+                                    <label for="branch-company">Empresa *</label>
+                                    <select id="branch-company" name="branch-company" required>
+                                        <option value="">Selecione uma empresa</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="branch-name">Nome da Filial *</label>
+                                    <input type="text" id="branch-name" name="branch-name" required placeholder="Ex: Matriz">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="branch-address">Endereço</label>
+                                    <input type="text" id="branch-address" name="branch-address" placeholder="Endereço da filial">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="branch-proxy-ip">IP do Servidor Proxy</label>
+                                    <input type="text" id="branch-proxy-ip" name="branch-proxy-ip" placeholder="Ex: 192.168.1.100">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="branch-proxy-port">Porta do Proxy</label>
+                                    <input type="number" id="branch-proxy-port" name="branch-proxy-port" placeholder="Ex: 3128" min="1" max="65535">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="branch-proxy-active" name="branch-proxy-active" checked>
+                                        <span class="checkmark"></span>
+                                        Proxy Ativo
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn-secondary" onclick="closeBranchModal()">Cancelar</button>
+                            <button class="btn-primary" onclick="saveBranch()">Salvar Filial</button>
+                        </div>
+                    </div>
+                </div>
+
+    <!-- Modal de Login para Configurações -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Acesso às Configurações</h3>
+                <span class="close" onclick="closeLoginModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Digite a senha para acessar as configurações do sistema:</p>
+                <div class="form-group">
+                    <label for="config-password">Senha:</label>
+                    <input type="password" id="config-password" placeholder="Digite a senha" onkeypress="handlePasswordKeypress(event)">
+                </div>
+                <div id="login-error" class="error-message" style="display: none;">
+                    Senha incorreta. Tente novamente.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeLoginModal()">Cancelar</button>
+                <button class="btn-primary" onclick="validatePassword()">Acessar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="database-client.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

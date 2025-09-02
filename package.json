@@ -1,0 +1,80 @@
+{
+  "name": "confnet",
+  "version": "1.0.0",
+  "description": "Aplicação ConfNet com menu de navegação",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "build-win": "electron-builder --win",
+    "dist": "electron-builder --publish=never",
+    "postinstall": "electron-builder install-app-deps && npx @electron/rebuild",
+    "rebuild": "npx @electron/rebuild"
+  },
+  "keywords": [
+    "electron",
+    "desktop",
+    "windows",
+    "confnet",
+    "menu"
+  ],
+  "author": "Gabriel",
+  "license": "MIT",
+  "devDependencies": {
+    "@electron/rebuild": "^4.0.1",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "electron-rebuild": "^3.2.9"
+  },
+  "build": {
+    "appId": "com.confnet.app",
+    "productName": "ConfNet",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!node_modules/**/*",
+      "!dist/**/*",
+      "!build/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "requestedExecutionLevel": "requireAdministrator",
+      "extraResources": [
+        {
+          "from": "app.manifest",
+          "to": "app.manifest"
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "ConfNet"
+    },
+    "portable": {
+      "artifactName": "ConfNet-Portable.exe"
+    }
+  },
+  "dependencies": {
+    "sqlite3": "^5.1.7"
+  }
+}
